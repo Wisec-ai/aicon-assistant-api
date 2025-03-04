@@ -5,7 +5,8 @@ from rest_framework import status
 from rest_framework.throttling import AnonRateThrottle
 from django.views.decorators.csrf import csrf_exempt
 from django.utils.decorators import method_decorator
-from .models import Document
+from .domain.models.document_info import DocumentInfo
+from .application.service import Service
 
 @method_decorator(csrf_exempt, name='dispatch')
 class DocumentListAPI(APIView):
@@ -17,14 +18,14 @@ class DocumentListAPI(APIView):
     def post(self, request):
 
         try:
-            pass
-            
+            document_info = DocumentInfo(**request.data)
+            Service.load_data_pubsub(document_info.file_name)
             return Response(
                 {
-                    "exit": "",
+                    "status": "Successful",
                     "details": "",
                 },
-                status=status.HTTP_500_INTERNAL_SERVER_ERROR,
+                status=status.HTTP_200_OK,
             )
 
         except Exception as e:

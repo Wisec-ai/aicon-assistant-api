@@ -9,12 +9,29 @@ https://docs.djangoproject.com/en/5.1/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.1/ref/settings/
 """
-
+import os
 from pathlib import Path
+import environ
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
+env = environ.Env()
+environ.Env.read_env(os.path.join(BASE_DIR, ".env"))
+
+# Media settings
+MEDIA_URL = "/media/"
+MEDIA_ROOT = os.path.join(BASE_DIR, "media")
+
+# Google Cloud settings
+GCP_APPLICATION_CONF = {
+    "PROJECT_ID": env.str("PROJECT_ID"),
+    "PROJECT_LOCATION": env.str("REGION"),
+    "DATASTORE_ID": env.str("DATA_STORE_ID"),
+    "DATASTORE_LOCATION": env.str("DATA_STORE_LOCATION"),
+    "STORAGE_NAME": env.str("GCP_STORAGE_NAME"),
+    "STORAGE_FOLDER": env.str("GCP_STORAGE_FOLDER"),
+}
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.1/howto/deployment/checklist/
@@ -25,7 +42,7 @@ SECRET_KEY = "django-insecure-2uslmw3)&o0^c_!d4d0kwb%bdnhbne3!pk$2ag1(8n#3jcs5lb
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
@@ -37,6 +54,9 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
+    "documents",
+    "commons",
+    "agent"
 ]
 
 MIDDLEWARE = [
@@ -79,6 +99,17 @@ DATABASES = {
         "NAME": BASE_DIR / "db.sqlite3",
     }
 }
+
+'''DATABASES = {
+    "default": {
+        "ENGINE": env.str("DB_ENGINE"),
+        "NAME": "ia-dev-django-app-bi-assistant-v2",
+        "USER": env.str("DB_USER"),
+        "PASSWORD": env.str("DB_PASSWORD"),
+        "HOST": env.str("DB_HOST"),
+        "PORT": env.str("DB_PORT"),
+    }
+}'''
 
 
 # Password validation
