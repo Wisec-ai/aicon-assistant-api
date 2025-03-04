@@ -1,6 +1,7 @@
 import json
 from typing import Any
 from commons.domain.repository.gcs_client import GcsClient
+from commons.domain.repository.gcloud_storage_client import GCloudStorageClient
 from commons.domain.repository.pubsub_client import PubSubClient
 from commons.domain.constants.env_variables import TOPIC_DOCUMENT_PROCESSOR
 
@@ -18,4 +19,12 @@ class Service:
         cls.publish_topic(json.dumps({
             "path_file": gcs_path_file
         }))
+        return gcs_path_file
+    
+    @classmethod
+    def generate_url(cls, file_name: str, sub_folder: str) -> str:
+        
+        gcloud_storage_client = GCloudStorageClient()
+        gcs_path_file = gcloud_storage_client.generate_presigned_url(file_name, sub_folder)
+
         return gcs_path_file

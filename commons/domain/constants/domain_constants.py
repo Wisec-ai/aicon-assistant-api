@@ -3,3 +3,5 @@ LLM_DEFAULT_CONFIG =  {
     "temperature": 1,
     "top_p": 0.95,
 }
+
+DEFAULT_EXPIRATION_TIME = 5

@@ -19,10 +19,12 @@ class DocumentListAPI(APIView):
 
         try:
             document_info = DocumentInfo(**request.data)
-            Service.load_data_pubsub(document_info.file_name)
+            company_sub_folder = "company_test/pdf"
+            url = Service.generate_url(document_info.file_name, company_sub_folder)
             return Response(
                 {
-                    "status": "Successful",
+                    "status": "successful",
+                    "url": url,
                     "details": "",
                 },
                 status=status.HTTP_200_OK,
@@ -33,6 +35,7 @@ class DocumentListAPI(APIView):
             return Response(
                 {
                     "error": "Error uploading file to cloud storage",
+                    "url": "",
                     "details": str(e),
                 },
                 status=status.HTTP_500_INTERNAL_SERVER_ERROR,
