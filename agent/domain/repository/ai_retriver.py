@@ -8,6 +8,7 @@ from langchain_google_community import VertexAISearchRetriever
 class AiRetriver:
     def __init__(self, max_documents: Optional[int]):
         self.retriever = self._define_retriver(max_documents)
+        print(f"{self.retriever}")
         print(f"PROJECT_ID {PROJECT_ID}, DATA_STORE_LOCATION {DATA_STORE_LOCATION}, DATA_STORE_ID {DATA_STORE_ID} ")
 
     def _define_retriver(
@@ -34,7 +35,7 @@ class AiRetriver:
         documents = self.invoke(f"${query}")
         
         examples_list = [
-            f"EJEMPLO {index}:\n{document.page_content}"
+            f"Documentos {index}:\n{document.page_content}"
             for index, document in enumerate(documents)
         ]
 

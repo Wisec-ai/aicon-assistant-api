@@ -23,12 +23,8 @@ urlpatterns = [
         include(
             [
                 path("chat/", include("agent.urls")),
-            ]
-        ),
-        include(
-            [
                 path("documents/", include("documents.urls")),
             ]
-        ),
+        )
     ),
 ]

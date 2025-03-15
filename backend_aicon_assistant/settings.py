@@ -29,8 +29,8 @@ GCP_APPLICATION_CONF = {
     "PROJECT_LOCATION": env.str("REGION"),
     "DATASTORE_ID": env.str("DATA_STORE_ID"),
     "DATASTORE_LOCATION": env.str("DATA_STORE_LOCATION"),
-    "STORAGE_NAME": env.str("GCP_STORAGE_NAME"),
-    "STORAGE_FOLDER": env.str("GCP_STORAGE_FOLDER"),
+    "GCLOUD_STORAGE_BUCKET": env.str("GCLOUD_STORAGE_BUCKET"),
+    "GCLOUD_STORAGE_FOLDER": env.str("GCLOUD_STORAGE_FOLDER"),
 }
 
 # Quick-start development settings - unsuitable for production

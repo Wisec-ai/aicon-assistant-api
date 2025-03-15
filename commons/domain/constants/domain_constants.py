@@ -5,3 +5,9 @@ LLM_DEFAULT_CONFIG =  {
 }
 
 DEFAULT_EXPIRATION_TIME = 5
+
+DAYS_OF_WEEK = ["lunes", "martes", "miércoles", "jueves", "viernes", "sábado", "domingo"]
+MONTHS = ["enero", "febrero", "marzo", "abril", "mayo", "junio", 
+         "julio", "agosto", "septiembre", "octubre", "noviembre", "diciembre"]
+
+MIDDLE_PATH_DIRECTORY = ""
