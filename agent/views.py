@@ -28,13 +28,10 @@ class AgentConversationAPI(APIView):
 
                     documents_info = ChatDocumentoInfoRequest(**request.data)
 
-                    print("Estoy aqui")
-
                     ai_retriver = AiRetriver(max_documents=documents_info.max_documents)
                     few_examples = ai_retriver.get_few_examples(documents_info.question)
-
-                    print("Fui al retriver")
-
+                    #few_examples = ""
+                    print(f"Few Examples {few_examples}")
                     response_question_service = ResponseQuestion()
                     template_system_instruction = DEFAULT_PROMPT
 
@@ -42,7 +39,7 @@ class AgentConversationAPI(APIView):
                          template_system_instruction,
                          few_examples
                     ).generate_system_instruction()
-
+                    print(f"Datos {llm_system_instruction}")
                     iterator_llm_response = response_question_service.generate_async_response_by_question(
                         llm_system_instruction,
                         documents_info.question

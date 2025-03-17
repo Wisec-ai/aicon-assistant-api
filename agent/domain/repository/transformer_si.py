@@ -9,7 +9,7 @@ class TransformerSystemInstruction:
         self.additional_params = additional_params
         self.system_instruction = system_instruction
         self.default_params = {
-            "few_examples": self.few_examples,
+            "few_examples": self.document_exampels,
             "current_datetime":  get_current_str_datetime()
         }
         pass
