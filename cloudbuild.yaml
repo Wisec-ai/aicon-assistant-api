@@ -1,0 +1,42 @@
+
+steps:
+  - name: 'gcr.io/cloud-builders/docker'
+    entrypoint: bash
+    args:
+      - '-c'
+      - |
+        docker build -t us-east4-docker.pkg.dev/$PROJECT_ID/${_REPOSITORY}/${_CLOUD_RUN_NAME}:${BUILD_ID} .\
+        && docker push us-east4-docker.pkg.dev/$PROJECT_ID/${_REPOSITORY}/${_CLOUD_RUN_NAME}:${BUILD_ID}
+    secretEnv: [
+      
+    ]
+
+  - name: 'us-east4-docker.pkg.dev/$PROJECT_ID/envsubst/envsubst:latest'
+    entrypoint: 'sh'
+    args:
+      - '-c'
+      - |
+        envsubst < ./service.yaml | sponge ./service.yaml
+        cat ./service.yaml
+  
+  - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
+    entrypoint: 'bash'
+    args:
+      - '-c'
+      - |
+        gcloud run services replace ./service.yaml
+    
+options:
+  env:
+    - 'CLOUD_RUN_NAME=$_CLOUD_RUN_NAME'
+    - 'REGION=$_REGION'
+    - 'PROJECT_ID=$PROJECT_ID'
+    - 'BUILD_ID=$BUILD_ID'
+    - 'STAGE=$_STAGE'
+    - 'REPOSITORY=$_REPOSITORY'
+
+substitutions:
+  _CLOUD_RUN_NAME: aicon-api-crm-v1
+  _REGION: us-east4
+  _REPOSITORY: aicon-api-agents
+
