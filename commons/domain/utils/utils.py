@@ -9,3 +9,6 @@ def get_current_str_datetime():
                        f"{current_datetime.year}")
 
     return str_current_datetime
+
+def generate_gcs_uri(bucket: str, folder: str) -> str:
+    return f"gs://{bucket}/{folder}"

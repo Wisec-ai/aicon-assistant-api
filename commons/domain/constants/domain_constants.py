@@ -11,3 +11,7 @@ MONTHS = ["enero", "febrero", "marzo", "abril", "mayo", "junio",
          "julio", "agosto", "septiembre", "octubre", "noviembre", "diciembre"]
 
 MIDDLE_PATH_DIRECTORY = ""
+
+DEFAULT_MIMETYPE = "application/octet-stream"
+
+DEFAULT_GLOBAL_LOCATION = "global"

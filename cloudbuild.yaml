@@ -5,8 +5,8 @@ steps:
     args:
       - '-c'
       - |
-        docker build -t us-east4-docker.pkg.dev/$PROJECT_ID/${_REPOSITORY}/${_CLOUD_RUN_NAME}:${BUILD_ID} .\
-        && docker push us-east4-docker.pkg.dev/$PROJECT_ID/${_REPOSITORY}/${_CLOUD_RUN_NAME}:${BUILD_ID}
+        docker build -t us-east4-docker.pkg.dev/$PROJECT_ID/${_REPOSITORY}/${_CLOUD_RUN_NAME}:latest .\
+        && docker push us-east4-docker.pkg.dev/$PROJECT_ID/${_REPOSITORY}/${_CLOUD_RUN_NAME}:latest
     secretEnv: [
       
     ]

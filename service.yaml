@@ -1,9 +1,9 @@
 apiVersion: serving.knative.dev/v1
 kind: Service
 metadata:
-  name: ${CLOUD_RUN_NAME}
+  name: aicon-api-crm-v1
   labels:
-    cloud.googleapis.com/location: ${REGION}
+    cloud.googleapis.com/location: us-east4
 spec:
   template:
     metadata:
@@ -15,15 +15,24 @@ spec:
       timeoutSeconds: 30
       serviceAccountName: 734156824859-compute@developer.gserviceaccount.com
       containers:
-        - image: us-east4-docker.pkg.dev/${PROJECT_ID}/${REPOSITORY}/${CLOUD_RUN_NAME}:${BUILD_ID}
+        - image: us-east4-docker.pkg.dev/wisecai-consultor-prod/aicon-api-agents/aicon-api-crm-v1:latest
           env:
             - name: PROJECT_ID
-              value: '${PROJECT_ID}'
+              value: 'wisecai-consultor-prod'
             - name: REGION
-              value: '${REGION}'
+              value: 'us-east4'
+            - name: DATA_STORE_ID
+              value: 'pdf-documents_1741058792606'
+            - name: DATA_STORE_LOCATION
+              value: 'global'
+            - name: GCLOUD_STORAGE_BUCKET
+              value: 'rs-nprd-dlk-ia-dev-aif-ml-agents'
+            - name: GCLOUD_STORAGE_FOLDER
+              value: 'data_assistant_ia_bi'
+
           ports:
             - name: http1
-              containerPort: 8000
+              containerPort: 8080
           resources:
             limits:
               cpu: '1'
