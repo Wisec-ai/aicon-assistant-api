@@ -7,12 +7,15 @@ from rest_framework.throttling import AnonRateThrottle
 from django.views.decorators.csrf import csrf_exempt
 from django.utils.decorators import method_decorator
 
-from .domain.entities.ChatDocumentoInfoRequest import ChatDocumentoInfoRequest
-from .domain.repository.ai_retriver import AiRetriver
-from .application.service.response_question import ResponseQuestion
+from agent.domain.entities.ChatDocumentoInfoRequest import ChatDocumentoInfoRequest
+from agent.domain.repository.ai_retriver import AiRetriver
+from agent.application.service.response_question import ResponseQuestion
 from django.http import StreamingHttpResponse
-from .domain.repository.transformer_si import TransformerSystemInstruction
-from .domain.constants.prompts import DEFAULT_PROMPT
+from agent.domain.repository.transformer_si import TransformerSystemInstruction
+from agent.domain.constants.prompts import DEFAULT_PROMPT
+from agent.models import Session, ConversationInfo, ConversationDetails
+from django.shortcuts import get_object_or_404
+
 
 @method_decorator(csrf_exempt, name='dispatch')
 class AgentConversationAPI(APIView):
@@ -27,6 +30,7 @@ class AgentConversationAPI(APIView):
                 try:
 
                     documents_info = ChatDocumentoInfoRequest(**request.data)
+                    current_session = get_object_or_404(Session, uuid=documents_info.session_id)
 
                     ai_retriver = AiRetriver(max_documents=documents_info.max_documents)
                     few_examples = ai_retriver.get_few_examples(documents_info.question)
@@ -45,10 +49,28 @@ class AgentConversationAPI(APIView):
                         documents_info.question
                     )
                     
+                    completed_llm_response = ""
+
                     for text_llm_response in iterator_llm_response:
-                                yield json.dumps(
-                                    {"raw_response": text_llm_response.text}
+                        completed_llm_response += text_llm_response.text 
+                        yield json.dumps(
+                            {"raw_response": text_llm_response.text}
+                        ) + "\n"
+
+                    yield json.dumps(
+                                    {"conversation_id": documents_info.conversation_id}
                                 ) + "\n"
+                    
+                    conversation_info = ConversationInfo.objects.create(
+                            uuid = documents_info.conversation_id,
+                            session_id = current_session
+                        )
+                    ConversationDetails.objects.create(
+                        question = documents_info.question,
+                        llm_response = completed_llm_response,
+                        conversation_info_id = conversation_info
+                    )
+
 
                 except Exception as error:
                     yield json.dumps(

@@ -1,5 +1,5 @@
 
-from typing import List, Any, Optional
+from typing import List, Any, Optional, Dict
 from agent.domain.constants.domain_constants import DEFAULT_MAX_NUMBER_RETRIEVER_DOCUMENTS
 from commons.domain.constants.env_variables import PROJECT_ID, DATA_STORE_LOCATION, DATA_STORE_ID
 from commons.domain.constants.exceptions import InternalServerException
@@ -19,7 +19,7 @@ class AiRetriver:
             project_id=PROJECT_ID,
             location_id=DATA_STORE_LOCATION,
             data_store_id=DATA_STORE_ID,
-            get_extractive_answers=False,
+            get_extractive_answers=enable_extract_answers,
             max_documents=max_documents,
         )
 
@@ -30,12 +30,15 @@ class AiRetriver:
         except Exception as error:
             print(f"Error ExceptionInvoke {error}")
             raise InternalServerException(f"{error}")
-        
+    
+    def source_file_name(self, document_metadata: Dict[str, str]) -> str:
+        return document_metadata["source"].split('/')[-1]
+
     def get_few_examples(self, query: str) -> str:
         documents = self.invoke(f"${query}")
-        
+
         examples_list = [
-            f"Documentos {index}:\n{document.page_content}"
+            f"Nombre del documento: {self.source_file_name(document.metadata)}\nContenido:{document.page_content}"
             for index, document in enumerate(documents)
         ]
 

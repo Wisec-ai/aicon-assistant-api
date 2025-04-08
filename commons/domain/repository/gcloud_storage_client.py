@@ -1,3 +1,4 @@
+import os
 import mimetypes
 from google.cloud import storage
 from commons.domain.constants.env_variables import DOCUMENT_BUCKET, DEFAULT_SUB_FOLDERS
@@ -27,12 +28,12 @@ class GCloudStorageClient:
         blob = bucket.blob(f"{sub_folder}/{file_name}")
 
         content_type = self._get_mime_type(file_name)
-
+        print("El Punto Env", os.getenv("GOOGLE_APPLICATION_CREDENTIALS"))
         url = blob.generate_signed_url(
             version="v4",
             expiration=timedelta(minutes=DEFAULT_EXPIRATION_TIME),
             method="PUT",
-            content_type=content_type,
+            content_type=content_type
         )
 
         return url

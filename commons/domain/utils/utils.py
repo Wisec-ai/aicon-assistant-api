@@ -1,5 +1,9 @@
+import uuid
 from datetime import datetime
 from commons.domain.constants.domain_constants import DAYS_OF_WEEK, MONTHS
+
+def generate_uuid() -> str:
+    return f"{uuid.uuid4()}"
 
 def get_current_str_datetime():
     current_datetime = datetime.now()
