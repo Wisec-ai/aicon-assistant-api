@@ -1,38 +1,39 @@
 apiVersion: serving.knative.dev/v1
 kind: Service
 metadata:
-  name: aicon-api-crm-v1
+  name: ${SERVICE_NAME}
   labels:
-    cloud.googleapis.com/location: us-east4
+    cloud.googleapis.com/location: ${REGION}
 spec:
   template:
     metadata:
       annotations:
+        revision-change-timestamp: "$(date +%s)"
         autoscaling.knative.dev/maxScale: '10'
         autoscaling.knative.dev/minScale: '1'
     spec:
       containerConcurrency: 80
       timeoutSeconds: 30
-      serviceAccountName: 734156824859-compute@developer.gserviceaccount.com
+      serviceAccountName: '${CLOUD_RUN_SA}'
       containers:
-        - image: us-east4-docker.pkg.dev/wisecai-consultor-prod/aicon-api-agents/aicon-api-crm-v1:latest
+        - image: ${REGION}-docker.pkg.dev/${PROJECT_ID}/${ARTIFACT_REPO}/${SERVICE_NAME}@${IMAGE_DIGEST}
           env:
             - name: PROJECT_ID
-              value: 'wisecai-consultor-prod'
+              value: '${PROJECT_ID}'
             - name: REGION
-              value: 'us-east4'
+              value: '${REGION}'
             - name: DATA_STORE_ID
-              value: 'pdf-documents_1741058792606'
+              value: '${DATA_STORE_ID}'
             - name: DATA_STORE_LOCATION
-              value: 'global'
+              value: '${DATA_STORE_LOCATION}'
             - name: GCLOUD_STORAGE_BUCKET
-              value: 'rs-nprd-dlk-ia-dev-aif-ml-agents'
+              value: '${GCLOUD_STORAGE_BUCKET}'
             - name: GCLOUD_STORAGE_FOLDER
-              value: 'data_assistant_ia_bi'
+              value: '${GCLOUD_STORAGE_FOLDER}'
             - name: DOCUMENT_BUCKET
-              value: 'aicon_assistant_documents'
+              value: '${DOCUMENT_BUCKET}'
             - name: GOOGLE_APPLICATION_CREDENTIALS
-              value: 'ai-backend-cred.json'
+              value: '${GOOGLE_APPLICATION_CREDENTIALS}'
               
           ports:
             - name: http1
